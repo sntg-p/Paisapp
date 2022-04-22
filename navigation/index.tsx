@@ -9,12 +9,12 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme as DefaultDarkTheme,
-  Theme
+  Theme,
+  useTheme
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
-import { View } from '../components/Themed';
+import { ColorSchemeName, Pressable, View } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -27,12 +27,15 @@ import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../typ
 import LinkingConfiguration from './LinkingConfiguration';
 import { Text } from '../components/Themed';
 import { StyleSheet } from 'react-native';
+import SignInScreen from '../screens/SignIn';
 
-const LightTheme = {
+const LightTheme: Theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
     background: 'white',
+    primary: 'hsla(225, 91%, 70%, 1)',
+    text: 'hsla(215, 24%, 26%, 1)',
   },
 };
 
@@ -41,7 +44,8 @@ const DarkTheme: Theme = {
   colors: {
     ...DefaultDarkTheme.colors,
     background: 'hsl(0, 0%, 6%)',
-    card: 'hsl(0, 0%, 8%)'
+    card: 'hsl(0, 0%, 8%)',
+    primary: 'hsla(225, 91%, 70%, 1)',
   },
 };
 
@@ -55,18 +59,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   );
 }
 
-const config = {
-  animation: 'spring',
-  config: {
-    stiffness: 1000,
-    damping: 500,
-    mass: 3,
-    overshootClamping: true,
-    restDisplacementThreshold: 0.01,
-    restSpeedThreshold: 0.01,
-  },
-};
-
 /**
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
@@ -74,23 +66,39 @@ const config = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const isSignedIn = false;
+
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Root"
-        component={BottomTabNavigator}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!" }}
-      />
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
+      {isSignedIn ? (
+        <>
+          <Stack.Screen
+            name="Root"
+            component={BottomTabNavigator}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="NotFound"
+            component={NotFoundScreen}
+            options={{ title: "Oops!" }}
+          />
+          <Stack.Group screenOptions={{ presentation: "modal" }}>
+            <Stack.Screen name="Modal" component={ModalScreen} />
+          </Stack.Group>
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="SignIn"
+            component={SignInScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 }
@@ -103,6 +111,7 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
+  const theme = useTheme();
 
   return (
     <BottomTab.Navigator
@@ -215,7 +224,7 @@ const styles = StyleSheet.create({
     marginRight: 24,
   },
   headerStyle: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'hsla(0, 0%, 100%, 0.84)',
     borderBottomColor: 'transparent',
     height: 96,
   },

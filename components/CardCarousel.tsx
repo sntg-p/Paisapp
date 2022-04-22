@@ -1,8 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { User } from '../types';
 import CardItem from './CardItem';
-
-import { View } from './Themed';
 
 export default function CardCarousel(props: { user: User }) {
   const { user } = props;

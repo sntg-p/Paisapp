@@ -1,0 +1,19 @@
+GET https://paisa-challange.herokuapp.com/api/v1/paisapp/contacts
+
+###
+
+GET https://paisa-challange.herokuapp.com/api/v1/paisapp/transactions
+
+###
+
+GET https://paisa-challange.herokuapp.com/api/v1/paisapp/user
+
+###
+
+POST https://paisa-challange.herokuapp.com/api/v1/paisapp/login
+Content-Type: application/json
+
+{
+    "email": "hola@paisanos.io",
+    "password": "soypaisanx"
+}

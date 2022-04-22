@@ -1,6 +1,5 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView, View } from 'react-native';
 
-import { View } from '../components/Themed';
 import { RootTabScreenProps, User } from '../types';
 import { Text } from '../components/Themed';
 import CardCarousel from '../components/CardCarousel';
@@ -39,17 +38,16 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'TabOne'>)
   const colorScheme = useColorScheme();
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <CardCarousel user={user}/>
 
       <View style={{
-        backgroundColor: 'transparent',
-        marginHorizontal: 24,
+        backgroundColor: 'transparent'
       }}>
         <ServicesSection/>
         <LastTransactionsSection/>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -57,7 +55,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
     flex: 1,
-    marginTop: 12,
+    marginTop: -96,
+    paddingTop: 108
   },
   title: {
     fontFamily: "Poppins_500Medium",

@@ -1,10 +1,11 @@
-import { StyleSheet, Pressable, useColorScheme } from 'react-native';
+import { StyleSheet, Pressable, useColorScheme, View } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { Shadow } from 'react-native-shadow-2';
 
-import { useThemeColor, View } from '../components/Themed';
+import { useThemeColor } from '../components/Themed';
 import { Text } from '../components/Themed';
 
 const services: ServiceProps[] = [
@@ -32,7 +33,7 @@ const services: ServiceProps[] = [
 
 export default function ServicesSection() {
   return (
-    <>
+    <View style={styles.container}>
       <Text style={styles.title}>
         Servicios
       </Text>
@@ -46,7 +47,7 @@ export default function ServicesSection() {
           <ServiceButton key={service.title} {...service}/>
         ))}
       </View>
-    </>
+    </View>
   );
 }
 
@@ -78,22 +79,32 @@ function ServiceButton(props: ServiceProps) {
         opacity: pressed ? 0.5 : 1,
       })}
     >
-      <View style={{
-        backgroundColor,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 16,
-        height: 64,
-        width: 64,
-      }}>
-        {typeof icon === 'string' ? (
-          <FontAwesome5
-            name="wallet"
-            size={24}
-            style={{ color: iconColor }}
-          />
-        ) : icon(24, iconColor)}
-      </View>
+      <Shadow
+        viewStyle={{
+          alignSelf: 'stretch',
+        }}
+        radius={16}
+        startColor="hsla(0, 0%, 0%, 0.06)"
+        offset={[0, 8]}
+        distance={30}
+      >
+        <View style={{
+          backgroundColor,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 16,
+          height: 64,
+          width: 64,
+        }}>
+          {typeof icon === 'string' ? (
+            <FontAwesome5
+              name="wallet"
+              size={24}
+              style={{ color: iconColor }}
+            />
+          ) : icon(24, iconColor)}
+        </View>
+      </Shadow>
 
       <Text style={[styles.asd, {
         color: textColor
@@ -106,8 +117,8 @@ function ServiceButton(props: ServiceProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: 12,
+    backgroundColor: 'transparent',
+    paddingHorizontal: 24,
   },
   title: {
     fontFamily: "Poppins_500Medium",

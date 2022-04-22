@@ -1,8 +1,8 @@
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme, View } from 'react-native';
 import Colors from '../constants/Colors';
 import { Card, User } from '../types';
 
-import { Text, View } from './Themed';
+import { Text } from './Themed';
 
 export default function CardItem(props: { name: string, card: Card }) {
   const {
