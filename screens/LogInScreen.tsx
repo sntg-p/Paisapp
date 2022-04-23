@@ -1,13 +1,49 @@
 import { StyleSheet, View, Pressable } from 'react-native';
 
 import { Text } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
+import { RootTabScreenProps, Transaction, User } from '../types';
 import { useTheme } from '@react-navigation/native';
 import Checkbox from '../components/Checkbox';
 import Input from '../components/Input';
+import useApi, { ApiResponse } from '../hooks/useApi';
+import { useState } from 'react';
+import { useUser } from '../contexts/UserContext';
 
-export default function SignInScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function LogInScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const theme = useTheme();
+  const setUser = useUser(state => state.setUser);
+  const { get, post, loading } = useApi();
+
+  const [email, setEmail] = useState<string>();
+  const [password, setPassword] = useState<string>();
+  const [error, setError] = useState<string>();
+
+  const handleLogIn = () => {
+    setError(undefined);
+
+    (async () => {
+      const login: ApiResponse = await post('/login', { email, password });
+
+      if (login.success) {
+        console.log('login success');
+
+        const fetchUser = async () => {
+          const user: ApiResponse<User> = await get('/user')
+
+          if (user.success) {
+            setUser(user.data);
+          } else if (user.error) {
+            setError(user.error);
+          }
+        };
+
+        fetchUser();
+      } else if (login.error) {
+        setError(login.error);
+        console.log(login.error);
+      }
+    })();
+  };
 
   return (
     <View style={styles.container}>
@@ -24,9 +60,21 @@ export default function SignInScreen({ navigation }: RootTabScreenProps<'TabOne'
         width: '100%',
         paddingHorizontal: 24,
       }}>
-        <Input label='Email' placeholder='Ingresa tu email'/>
+        <Input
+          label='Email'
+          placeholder='Ingresa tu email'
+          onChangeText={(text) => setEmail(text)}
+        />
+
         <View style={{ height: 24 }}/>
-        <Input label='Contraseña' placeholder='Ingresa tu contraseña'/>
+
+        <Input
+          label='Contraseña'
+          placeholder='Ingresa tu contraseña'
+          secureTextEntry
+          onChangeText={(text) => setPassword(text)}
+        />
+
         <View style={{ height: 16 }}/>
         <Checkbox text="Recordarme"/>
       </View>
@@ -39,6 +87,18 @@ export default function SignInScreen({ navigation }: RootTabScreenProps<'TabOne'
         justifyContent: 'center',
         alignItems: 'center',
       }}>
+        {error ? (
+          <Text style={{
+            fontSize: 18,
+            fontFamily: 'Poppins_500Medium',
+            lineHeight: 24,
+            color: 'red',
+            marginBottom: 16,
+          }}>
+            {error}
+          </Text>
+        ) : null}
+
         <Pressable
           style={({ pressed }) => ({
             opacity: pressed ? 0.5 : 1,
@@ -65,8 +125,10 @@ export default function SignInScreen({ navigation }: RootTabScreenProps<'TabOne'
             height: 60,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: 'hsla(217, 100%, 47%, 1)',
+            backgroundColor: !loading ? 'hsla(217, 100%, 47%, 1)' : theme.colors.primary,
           })}
+          onPress={handleLogIn}
+          disabled={loading}
         >
           <Text style={{
             color: 'white',
@@ -74,7 +136,7 @@ export default function SignInScreen({ navigation }: RootTabScreenProps<'TabOne'
             fontFamily: 'Poppins_600SemiBold',
             lineHeight: 22,
           }}>
-            Ingresar
+            {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </Text>
         </Pressable>
       </View>

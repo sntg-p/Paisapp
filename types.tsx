@@ -44,6 +44,16 @@ export interface Card {
   expDate: string;
 }
 
+export type TransactionType = "PAYMENT" | "DEBIT";
+
+export interface Transaction {
+  id: number;
+  type: TransactionType;
+  title: string;
+  description: string;
+  total: number;
+}
+
 export interface User {
   name: string;
   cards: Card[];

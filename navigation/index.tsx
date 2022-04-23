@@ -25,9 +25,10 @@ import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
-import { Text } from '../components/Themed';
+import { Text, useThemeColor } from '../components/Themed';
 import { StyleSheet } from 'react-native';
-import SignInScreen from '../screens/SignIn';
+import LogInScreen from '../screens/LogInScreen';
+import { useUser } from '../contexts/UserContext';
 
 const LightTheme: Theme = {
   ...DefaultTheme,
@@ -66,11 +67,11 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const isSignedIn = false;
+  const loggedIn = useUser(state => state.loggedIn);
 
   return (
     <Stack.Navigator>
-      {isSignedIn ? (
+      {loggedIn ? (
         <>
           <Stack.Screen
             name="Root"
@@ -92,7 +93,7 @@ function RootNavigator() {
         <>
           <Stack.Screen
             name="SignIn"
-            component={SignInScreen}
+            component={LogInScreen}
             options={{
               headerShown: false,
             }}
@@ -110,21 +111,26 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-  const theme = useTheme();
+  const headerColor = useThemeColor({ name: 'headerBackground' });
+  const tintColor = useThemeColor({ name: 'tint' });
+  const textColor = useThemeColor({ name: 'text' });
 
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: tintColor,
       }}
     >
       <BottomTab.Screen
         name="Home"
         component={HomeScreen}
         options={({ navigation }: RootTabScreenProps<"Home">) => ({
-          headerStyle: styles.headerStyle,
+          headerStyle: {
+            backgroundColor: headerColor,
+            borderBottomColor: 'transparent',
+            height: 96,
+          },
           headerTitle: () => (
             <>
               <Text
@@ -161,7 +167,7 @@ function BottomTabNavigator() {
                 <FontAwesome
                   name="search"
                   size={25}
-                  color={Colors[colorScheme].text}
+                  color={textColor}
                 />
               </Pressable>
 
@@ -174,7 +180,7 @@ function BottomTabNavigator() {
                 <FontAwesome
                   name="bell-o"
                   size={25}
-                  color={Colors[colorScheme].text}
+                  color={textColor}
                 />
               </Pressable>
             </View>
@@ -197,7 +203,7 @@ function BottomTabNavigator() {
               <FontAwesome
                 name="info-circle"
                 size={25}
-                color={Colors[colorScheme].text}
+                color={textColor}
                 style={{ marginRight: 15 }}
               />
             </Pressable>

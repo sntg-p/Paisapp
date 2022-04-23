@@ -9,16 +9,19 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 
 export function useThemeColor(
-  props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light & keyof typeof Colors.dark
+  props: {
+    light?: string;
+    dark?: string;
+    name?: keyof typeof Colors.light & keyof typeof Colors.dark,
+  },
 ) {
   const theme = useColorScheme();
-  const colorFromProps = props[theme];
+  const colorFromProps = props && props[theme];
 
   if (colorFromProps) {
     return colorFromProps;
-  } else {
-    return Colors[theme][colorName];
+  } else if (props.name) {
+    return Colors[theme][props.name];
   }
 }
 
@@ -32,7 +35,7 @@ export type ViewProps = ThemeProps & DefaultView['props'];
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+  const color = useThemeColor({ name: 'text', light: lightColor, dark: darkColor });
 
   return <DefaultText style={[{ color, fontFamily: 'Poppins_400Regular' }, style]} {...otherProps} />;
 }

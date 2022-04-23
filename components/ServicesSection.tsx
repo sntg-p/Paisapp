@@ -70,7 +70,7 @@ function ServiceButton(props: ServiceProps) {
     `hsla(${hue}, 24%, 12%, 1)` :
     `hsla(${hue}, 100%, 95%, 1)`;
 
-  const textColor = useThemeColor({}, 'secondaryText');
+  const textColor = useThemeColor({ name: 'secondaryText' });
 
   return (
     <Pressable

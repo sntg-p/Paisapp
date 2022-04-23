@@ -13,39 +13,51 @@ import { useThemeColor } from "./Themed";
 import { Text } from "./Themed";
 import { useTheme } from "@react-navigation/native";
 import Shadow from "./Shadow";
-import Colors from "../constants/Colors";
+import { Transaction, TransactionType } from "../types";
+import { useUser } from "../contexts/UserContext";
+import useApi, { ApiResponse } from "../hooks/useApi";
+import { useEffect, useState } from "react";
 
-const transactions: ListItemProps[] = [
-  {
-    title: "Adobe",
-    subtitle: "Pago de suscripcion",
-    right: "$125",
-    icon: "wallet",
+const icons: { [key in TransactionType]: { hue: number, icon: (size: number, color: string) => React.ReactNode } } = {
+  PAYMENT: {
     hue: 264,
+    icon: (size, color) => (
+      <FontAwesome5 name="wallet" size={size} style={{ color }}/>
+    )
   },
-  {
-    title: "Juan David",
-    subtitle: "Pago recibido",
-    right: "$95",
+
+  DEBIT: {
+    hue: 147,
     icon: (size, color) => (
       <Entypo name="arrow-down" size={size} color={color} />
-    ),
-    hue: 147,
+    )
   },
-  {
-    title: "John Doe",
-    subtitle: "Pago recibido",
-    right: "$30",
-    icon: (size, color) => (
-      <Entypo name="arrow-down" size={size} color={color} />
-    ),
-    hue: 147,
-  },
-];
+}
 
 export default function LastTransactionsSection() {
-  return (
-    <>
+  const transactions = useUser(state => state.transactions);
+  const setTransactions = useUser(state => state.setTransactions);
+  const [errorMessage, setError] = useState('');
+  const { get, post, loading, error } = useApi();
+
+  useEffect(() => {
+    if (!transactions) {
+      const fetchTransactions = async () => {
+        const transactions: ApiResponse<Transaction[]> = await get('/transactions')
+
+        if (transactions.success) {
+          setTransactions(transactions.data);
+        } else if (transactions.error) {
+          setError(transactions.error);
+        }
+      };
+
+      fetchTransactions();
+    }
+  }, [transactions]);
+
+  if (transactions)
+    return (
       <FlatList
         ListHeaderComponent={
           <Text style={styles.title}>Últimas transacciones</Text>
@@ -60,13 +72,34 @@ export default function LastTransactionsSection() {
           />
         )}
         ListFooterComponent={Footer}
-        renderItem={renderItem}
+        renderItem={renderTransactionItem}
         contentContainerStyle={{
           paddingTop: 36,
           paddingHorizontal: 24,
         }}
+        keyExtractor={(item) => item.title + item.description}
       />
-    </>
+    );
+
+  let text = 'Cargando últimas transacciones...';
+
+  if (errorMessage)
+    text = 'Error al cargar últimas transacciones, reintentar';
+
+  if (error)
+    text = error.message;
+
+  if (loading)
+    text = 'Cargando últimas transacciones...';
+
+  return (
+    <View style={{
+      paddingTop: 36,
+      paddingHorizontal: 24,
+    }}>
+      <Text style={styles.title}>Últimas transacciones</Text>
+      <Text>{text}</Text>
+    </View>
   );
 }
 
@@ -94,16 +127,30 @@ function renderItem({ item }: ListRenderItemInfo<ListItemProps>) {
   return <ListItem key={item.title} {...item} />;
 }
 
+function renderTransactionItem({ item }: ListRenderItemInfo<Transaction>) {
+  const { hue, icon } = icons[item.type];
+
+  return (
+    <ListItem
+      key={item.title}
+      {...item}
+      hue={hue}
+      icon={icon}
+      right={`$${item.total}`}
+    />
+  );
+}
+
 interface ListItemProps {
   icon: string | ((size: number, color: string) => React.ReactNode);
   title: string;
-  subtitle: string;
+  description: string;
   right?: string;
   hue: number;
 }
 
 function ListItem(props: ListItemProps) {
-  const { icon, title, subtitle, right, hue } = props;
+  const { icon, title, description: subtitle, right, hue } = props;
 
   const colorScheme = useColorScheme();
 
@@ -117,8 +164,8 @@ function ListItem(props: ListItemProps) {
       ? `hsla(${hue}, 24%, 12%, 1)`
       : `hsla(${hue}, 100%, 95%, 1)`;
 
-  const textColor = useThemeColor({}, "secondaryText");
-  const subColor = useThemeColor({}, "baseText");
+  const textColor = useThemeColor({ name: "secondaryText" });
+  const subColor = useThemeColor({ name: "baseText" });
   const { colors } = useTheme();
 
   const backgroundColor = colors.card;
