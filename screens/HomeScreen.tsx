@@ -1,11 +1,9 @@
 import { StyleSheet, ScrollView, View } from 'react-native';
 
 import { RootTabScreenProps, User } from '../types';
-import { Text } from '../components/Themed';
 import CardCarousel from '../components/CardCarousel';
 import ServicesSection from '../components/ServicesSection';
 import LastTransactionsSection from '../components/LastTransactionsSection';
-import { useColorScheme } from 'react-native';
 
 const user: User = {
   name: 'Soy Paisanx',
@@ -35,8 +33,6 @@ const user: User = {
 }
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  const colorScheme = useColorScheme();
-
   return (
     <ScrollView style={styles.container}>
       <CardCarousel user={user}/>

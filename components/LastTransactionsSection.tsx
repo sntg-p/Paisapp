@@ -181,7 +181,6 @@ function ListItem(props: ListItemProps) {
           paddingVertical: 24,
           paddingHorizontal: 16,
           borderRadius: 16,
-          gap: 16,
           opacity: pressed ? 0.5 : 1,
         })}
       >
@@ -191,6 +190,7 @@ function ListItem(props: ListItemProps) {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 12,
+            marginRight: 16,
             height: 44,
             width: 44,
           }}
@@ -256,11 +256,6 @@ function ListItem(props: ListItemProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    backgroundColor: "transparent",
-    gap: 16,
-  },
   title: {
     fontFamily: "Poppins_500Medium",
     fontSize: 20,

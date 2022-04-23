@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 12,
+    marginRight: 12,
     width: '100%',
   },
   title: {
@@ -100,11 +101,11 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 6,
+    marginRight: 8,
   },
   balanceContainer: {
     backgroundColor: 'transparent',
     flexDirection: 'row',
-    gap: 8,
     alignItems: 'center',
     marginTop: 8,
     marginBottom: 24,
@@ -137,13 +138,13 @@ const styles = StyleSheet.create({
   expDateContainer: {
     backgroundColor: 'transparent',
     flexDirection: 'column',
-    gap: 4,
     alignItems: 'center',
   },
   expDateTitle: {
     color: 'white',
     fontFamily: "Poppins_500Medium",
     fontSize: 10,
+    marginBottom: 4,
     lineHeight: 15,
   },
   expDate: {

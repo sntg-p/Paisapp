@@ -162,6 +162,7 @@ function BottomTabNavigator() {
                 onPress={() => navigation.navigate("Modal")}
                 style={({ pressed }) => ({
                   opacity: pressed ? 0.5 : 1,
+                  margin: 12,
                 })}
               >
                 <FontAwesome
@@ -175,6 +176,7 @@ function BottomTabNavigator() {
                 onPress={() => navigation.navigate("Modal")}
                 style={({ pressed }) => ({
                   opacity: pressed ? 0.5 : 1,
+                  margin: 12,
                 })}
               >
                 <FontAwesome
@@ -226,7 +228,6 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
     backgroundColor: 'transparent',
-    gap: 24,
     marginRight: 24,
   },
   headerStyle: {
