@@ -2,48 +2,18 @@ import { StyleSheet, ScrollView, View } from 'react-native';
 
 import { RootTabScreenProps, User } from '../types';
 import CardCarousel from '../components/CardCarousel';
-import ServicesSection from '../components/ServicesSection';
-import LastTransactionsSection from '../components/LastTransactionsSection';
-
-const user: User = {
-  name: 'Soy Paisanx',
-  cards: [
-    {
-      id: 1,
-      number: "1234 2345 2345 1234",
-      balance: 978.85,
-      symbol: "USD",
-      expDate: "02/30"
-    },
-    {
-      id: 2,
-      number: "1234 2345 2345 1235",
-      balance: 100,
-      symbol: "USD",
-      expDate: "02/24"
-    },
-    {
-      id: 3,
-      number: "1234 2345 2345 3322",
-      balance: 50,
-      symbol: "USD",
-      expDate: "02/24"
-    }
-  ],
-}
+import ServiceList from '../components/ServiceList';
+import LastTransactionList from '../components/LastTransactionList';
+import { useUser } from '../contexts/UserContext';
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  return (
-    <ScrollView style={styles.container}>
-      <CardCarousel user={user}/>
+  const user = useUser(state => state.user!)
 
-      <View style={{
-        backgroundColor: 'transparent'
-      }}>
-        <ServicesSection/>
-        <LastTransactionsSection/>
-      </View>
-    </ScrollView>
+  return (
+    <LastTransactionList>
+      <CardCarousel user={user}/>
+      <ServiceList/>
+    </LastTransactionList>
   );
 }
 

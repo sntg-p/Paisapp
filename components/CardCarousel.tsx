@@ -22,8 +22,7 @@ const styles = StyleSheet.create({
   carousel: {
     backgroundColor: 'transparent',
     width: '100%',
-    paddingLeft: 24,
-    paddingRight: 32,
+    paddingRight: 12,
     flexDirection: 'row',
   },
 });

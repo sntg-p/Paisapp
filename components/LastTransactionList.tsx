@@ -16,7 +16,7 @@ import Shadow from "./Shadow";
 import { Transaction, TransactionType } from "../types";
 import { useUser } from "../contexts/UserContext";
 import useApi, { ApiResponse } from "../hooks/useApi";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 const icons: { [key in TransactionType]: { hue: number, icon: (size: number, color: string) => React.ReactNode } } = {
   PAYMENT: {
@@ -34,7 +34,11 @@ const icons: { [key in TransactionType]: { hue: number, icon: (size: number, col
   },
 }
 
-export default function LastTransactionsSection() {
+interface LastTransactionListProps {
+  children?: ReactNode;
+}
+
+export default function LastTransactionList({ children }: LastTransactionListProps) {
   const transactions = useUser(state => state.transactions);
   const setTransactions = useUser(state => state.setTransactions);
   const [errorMessage, setError] = useState('');
@@ -60,21 +64,22 @@ export default function LastTransactionsSection() {
     return (
       <FlatList
         ListHeaderComponent={
-          <Text style={styles.title}>Últimas transacciones</Text>
+          <>
+            {children}
+            <Text style={styles.title}>Últimas transacciones</Text>
+          </>
         }
         data={transactions}
         ItemSeparatorComponent={() => (
-          <View
-            style={{
-              height: 16,
-              backgroundColor: "transparent",
-            }}
-          />
+          <View style={{
+            height: 16,
+            backgroundColor: "transparent",
+          }}/>
         )}
         ListFooterComponent={Footer}
         renderItem={renderTransactionItem}
         contentContainerStyle={{
-          paddingTop: 36,
+          paddingTop: 102,
           paddingHorizontal: 24,
         }}
         keyExtractor={(item) => item.title + item.description}

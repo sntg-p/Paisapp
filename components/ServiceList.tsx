@@ -5,8 +5,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Shadow } from 'react-native-shadow-2';
 
-import { useThemeColor } from '../components/Themed';
-import { Text } from '../components/Themed';
+import { useThemeColor } from './Themed';
+import { Text } from './Themed';
 
 const services: ServiceProps[] = [
   {
@@ -31,7 +31,7 @@ const services: ServiceProps[] = [
   },
 ]
 
-export default function ServicesSection() {
+export default function ServiceList() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
@@ -118,7 +118,7 @@ function ServiceButton(props: ServiceProps) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
-    paddingHorizontal: 24,
+    paddingBottom: 32,
   },
   title: {
     fontFamily: "Poppins_500Medium",

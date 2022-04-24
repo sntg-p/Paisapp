@@ -16,8 +16,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable, View } from 'react-native';
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
 import HomeScreen from '../screens/HomeScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
@@ -126,8 +124,14 @@ function BottomTabNavigator() {
         name="Home"
         component={HomeScreen}
         options={({ navigation }: RootTabScreenProps<"Home">) => ({
+          headerTransparent: true,
+          headerBackground: () => (
+            <View style={{
+              backgroundColor: headerColor,
+              height: 96,
+            }}/>
+          ),
           headerStyle: {
-            backgroundColor: headerColor,
             borderBottomColor: 'transparent',
             height: 96,
           },
