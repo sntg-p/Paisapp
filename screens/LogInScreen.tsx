@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput } from 'react-native';
 
 import { Text } from '../components/Themed';
 import { RootTabScreenProps, Transaction, User } from '../types';
@@ -6,7 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import Checkbox from '../components/Checkbox';
 import Input from '../components/Input';
 import useApi, { ApiResponse } from '../hooks/useApi';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useUser } from '../contexts/UserContext';
 
 export default function LogInScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
@@ -17,6 +17,8 @@ export default function LogInScreen({ navigation }: RootTabScreenProps<'TabOne'>
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [error, setError] = useState<string>();
+
+  const passwordRef = useRef<TextInput>(null);
 
   const handleLogIn = () => {
     setError(undefined);
@@ -64,15 +66,18 @@ export default function LogInScreen({ navigation }: RootTabScreenProps<'TabOne'>
           label='Email'
           placeholder='Ingresa tu email'
           onChangeText={(text) => setEmail(text)}
+          onSubmitEditing={() => passwordRef.current?.focus()}
         />
 
         <View style={{ height: 24 }}/>
 
         <Input
+          ref={passwordRef}
           label='Contraseña'
           placeholder='Ingresa tu contraseña'
           secureTextEntry
           onChangeText={(text) => setPassword(text)}
+          onSubmitEditing={handleLogIn}
         />
 
         <View style={{ height: 16 }}/>

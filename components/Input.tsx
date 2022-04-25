@@ -1,4 +1,5 @@
-import { StyleSheet, TextInput, View } from 'react-native';
+import { forwardRef } from 'react';
+import { NativeSyntheticEvent, StyleSheet, TextInput, TextInputSubmitEditingEventData, View } from 'react-native';
 import Shadow from '../components/Shadow';
 
 import { Text, useThemeColor } from '../components/Themed';
@@ -8,10 +9,11 @@ interface InputProps {
   placeholder?: string;
   secureTextEntry?: boolean;
   onChangeText?: (text: string) => void;
+  onSubmitEditing?: ((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void)
 }
 
-export default function Input(props: InputProps) {
-  const { label, placeholder, secureTextEntry, onChangeText } = props;
+const Input = forwardRef<TextInput, InputProps>((props, ref) => {
+  const { label, placeholder, secureTextEntry, onChangeText, onSubmitEditing } = props;
   const cardColor = useThemeColor({ name: 'foreground' });
   const textColor = useThemeColor({ name: 'text' });
 
@@ -25,6 +27,7 @@ export default function Input(props: InputProps) {
 
       <Shadow>
         <TextInput
+          ref={ref}
           placeholder={placeholder}
           placeholderTextColor={'#AAAAAA'}
           secureTextEntry={secureTextEntry}
@@ -33,11 +36,14 @@ export default function Input(props: InputProps) {
             color: textColor,
           }]}
           onChangeText={onChangeText}
+          onSubmitEditing={onSubmitEditing}
         ></TextInput>
       </Shadow>
     </View>
   );
-}
+});
+
+export default Input;
 
 const inputStyles = StyleSheet.create({
   container: {

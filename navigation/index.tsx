@@ -93,6 +93,7 @@ function RootNavigator() {
             name="SignIn"
             component={LogInScreen}
             options={{
+              title: 'Inicia sesión - Paisapp',
               headerShown: false,
             }}
           />
