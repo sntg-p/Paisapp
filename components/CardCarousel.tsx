@@ -1,28 +1,40 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import { User } from '../types';
 import CardItem from './CardItem';
 
 export default function CardCarousel(props: { user: User }) {
-  const { user } = props;
+  const { user: { name, cards } } = props;
 
   return (
-    <View style={styles.carousel}>
-      {user.cards.map(card => (
+    <FlatList
+      data={cards}
+      ListHeaderComponent={() => (
+        <View style={{ width: 24 }}/>
+      )}
+      ListFooterComponent={() => (
+        <View style={{ width: 24 }}/>
+      )}
+      ItemSeparatorComponent={() => (
+        <View style={{ width: 12 }}/>
+      )}
+      renderItem={({ item }) => (
         <CardItem
-          key={card.id}
-          name={user.name}
-          card={card}
+          key={item.id}
+          name={name}
+          card={item}
         />
-      ))}
-    </View>
+      )}
+      snapToInterval={344}
+      decelerationRate="fast"
+      horizontal={true}
+      keyExtractor={(item) => String(item.id)}
+      style={styles.carousel}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   carousel: {
-    backgroundColor: 'transparent',
-    width: '100%',
-    paddingRight: 12,
-    flexDirection: 'row',
+    marginHorizontal: -24,
   },
 });

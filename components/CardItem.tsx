@@ -83,8 +83,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 12,
-    marginRight: 12,
-    width: '100%',
+    width: 344,
   },
   title: {
     color: 'white',
