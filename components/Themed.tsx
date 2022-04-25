@@ -22,6 +22,8 @@ export function useThemeColor(
     return colorFromProps;
   } else if (props.name) {
     return Colors[theme][props.name];
+  } else {
+    return Colors['light'].text;
   }
 }
 
