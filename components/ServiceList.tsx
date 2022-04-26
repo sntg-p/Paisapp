@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Shadow } from 'react-native-shadow-2';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { useThemeColor } from './Themed';
 import { Text } from './Themed';
@@ -33,7 +34,10 @@ const services: ServiceProps[] = [
 
 export default function ServiceList() {
   return (
-    <View style={styles.container}>
+    <Animated.View
+      style={styles.container}
+      entering={FadeInUp.delay(150).duration(300)}
+    >
       <Text style={styles.title}>
         Servicios
       </Text>
@@ -47,7 +51,7 @@ export default function ServiceList() {
           <ServiceButton key={service.title} {...service}/>
         ))}
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

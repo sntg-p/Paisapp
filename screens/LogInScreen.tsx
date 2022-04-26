@@ -1,15 +1,16 @@
 import { StyleSheet, View, Pressable, TextInput } from 'react-native';
 
 import { Text } from '../components/Themed';
-import { RootTabScreenProps, Transaction, User } from '../types';
+import { RootStackScreenProps, User } from '../types';
 import { useTheme } from '@react-navigation/native';
 import Checkbox from '../components/Checkbox';
 import Input from '../components/Input';
 import useApi, { ApiResponse } from '../hooks/useApi';
 import { useRef, useState } from 'react';
 import { useUser } from '../contexts/UserContext';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
-export default function LogInScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function LogInScreen({ navigation }: RootStackScreenProps<'LogIn'>) {
   const theme = useTheme();
   const setUser = useUser(state => state.setUser);
   const { get, post, loading } = useApi();
@@ -49,23 +50,29 @@ export default function LogInScreen({ navigation }: RootTabScreenProps<'TabOne'>
 
   return (
     <View style={styles.container}>
-      <View style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
+      <Animated.View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        entering={FadeInDown.duration(500)}
+      >
         <View style={styles.iconBackground}/>
         <Text style={styles.title}>Paisapp</Text>
         <Text style={styles.subtitle}>Comienza a manejar tu vida financiera</Text>
-      </View>
+      </Animated.View>
 
-      <View style={{
-        width: '100%',
-        paddingHorizontal: 24,
-      }}>
+      <Animated.View
+        style={{
+          width: '100%',
+          paddingHorizontal: 24,
+        }}
+        entering={FadeInDown.delay(25).duration(500)}
+      >
         <Input
           label='Email'
           placeholder='Ingresa tu email'
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => setEmail(text.trim())}
           onSubmitEditing={() => passwordRef.current?.focus()}
         />
 
@@ -82,16 +89,19 @@ export default function LogInScreen({ navigation }: RootTabScreenProps<'TabOne'>
 
         <View style={{ height: 16 }}/>
         <Checkbox text="Recordarme"/>
-      </View>
+      </Animated.View>
 
       <View style={{ flex: 1 }}/>
 
-      <View style={{
-        paddingHorizontal: 24,
-        paddingBottom: 36,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+      <Animated.View
+        style={{
+          paddingHorizontal: 24,
+          paddingBottom: 36,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        entering={FadeInDown.delay(50).duration(500)}
+      >
         {error ? (
           <Text style={{
             fontSize: 18,
@@ -144,7 +154,7 @@ export default function LogInScreen({ navigation }: RootTabScreenProps<'TabOne'>
             {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </Text>
         </Pressable>
-      </View>
+      </Animated.View>
     </View>
   );
 }

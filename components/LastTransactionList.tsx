@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import Animated, { Layout, SlideInLeft } from 'react-native-reanimated';
 
 import { Text } from "./Themed";
 import { useTheme } from "@react-navigation/native";
@@ -43,64 +44,54 @@ export default function LastTransactionList({ children }: LastTransactionListPro
   const { get, loading, error } = useApi();
 
   useEffect(() => {
-    if (!transactions) {
-      const fetchTransactions = async () => {
-        const transactions: ApiResponse<Transaction[]> = await get('/transactions')
+    if (transactions)
+      return;
 
-        if (transactions.success) {
-          setTransactions(transactions.data);
-        } else if (transactions.error) {
-          setError(transactions.error);
-        }
-      };
+    const fetchTransactions = async () => {
+      const transactions: ApiResponse<Transaction[]> = await get('/transactions')
 
-      fetchTransactions();
-    }
+      if (transactions.success) {
+        setTransactions(transactions.data);
+      } else if (transactions.error) {
+        setError(transactions.error);
+      }
+    };
+
+    fetchTransactions();
   }, [transactions]);
-
-  if (transactions)
-    return (
-      <FlatList
-        ListHeaderComponent={
-          <>
-            {children}
-            <Text style={styles.title}>Últimas transacciones</Text>
-          </>
-        }
-        data={transactions}
-        ItemSeparatorComponent={() => (
-          <View style={{
-            height: 16,
-            backgroundColor: "transparent",
-          }}/>
-        )}
-        ListFooterComponent={Footer}
-        renderItem={renderItem}
-        contentContainerStyle={{
-          paddingTop: 102,
-          paddingHorizontal: 24,
-        }}
-        keyExtractor={(item) => item.title + item.description}
-      />
-    );
 
   let text = 'Cargando últimas transacciones...';
 
   if (loading)
     text = 'Cargando últimas transacciones...';
   else if (errorMessage)
-    text = 'Error al cargar últimas transacciones, reintentar';
+    text = errorMessage;
   else if (error)
     text = error.message;
 
   return (
-    <View style={{
-      paddingTop: 36,
-      paddingHorizontal: 24,
-    }}>
-      <Text style={styles.title}>Últimas transacciones</Text>
-      <Text>{text}</Text>
-    </View>
+    <FlatList
+      ListHeaderComponent={
+        <>
+          {children}
+          <Text style={styles.title}>Últimas transacciones</Text>
+        </>
+      }
+      data={transactions}
+      ItemSeparatorComponent={() => (
+        <View style={{
+          height: 16,
+          backgroundColor: "transparent",
+        }}/>
+      )}
+      ListFooterComponent={Footer}
+      renderItem={renderItem}
+      contentContainerStyle={{
+        paddingTop: 102,
+        paddingHorizontal: 24,
+      }}
+      keyExtractor={(item) => item.title + item.description}
+    />
   );
 }
 
@@ -124,16 +115,21 @@ function Footer() {
   );
 }
 
-function renderItem({ item }: ListRenderItemInfo<Transaction>) {
+function renderItem({ item, index }: ListRenderItemInfo<Transaction>) {
   const { hue, icon } = icons[item.type];
 
   return (
-    <ListItem
-      {...item}
-      hue={hue}
-      icon={icon}
-      right={`$${item.total}`}
-    />
+    <Animated.View
+      entering={SlideInLeft.delay(100 + index * 50).duration(300)}
+      layout={Layout.springify()}
+    >
+      <ListItem
+        {...item}
+        hue={hue}
+        icon={icon}
+        right={`$${item.total}`}
+      />
+    </Animated.View>
   );
 }
 

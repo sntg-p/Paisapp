@@ -19,7 +19,7 @@ import { ColorSchemeName, Pressable, View } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
+import ContactsScreen from '../screens/ContactsScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -27,6 +27,11 @@ import { Text, useThemeColor } from '../components/Themed';
 import { StyleSheet } from 'react-native';
 import LogInScreen from '../screens/LogInScreen';
 import { useUser } from '../contexts/UserContext';
+
+import { enableScreens } from 'react-native-screens';
+import { createStackNavigator } from '@react-navigation/stack';
+
+enableScreens(true);
 
 const LightTheme: Theme = {
   ...DefaultTheme,
@@ -62,20 +67,25 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const backgroundColor = useThemeColor({ name: 'background' });
   const loggedIn = useUser(state => state.loggedIn);
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        cardStyle: { backgroundColor },
+      }}
+    >
       {loggedIn ? (
         <>
           <Stack.Screen
             name="Root"
             component={BottomTabNavigator}
             options={{
-              headerShown: false,
+              headerShown: false
             }}
           />
           <Stack.Screen
@@ -90,7 +100,7 @@ function RootNavigator() {
       ) : (
         <>
           <Stack.Screen
-            name="SignIn"
+            name="LogIn"
             component={LogInScreen}
             options={{
               title: 'Inicia sesión - Paisapp',
@@ -110,6 +120,7 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
+  const backgroundColor = useThemeColor({ name: 'background' });
   const headerColor = useThemeColor({ name: 'headerBackground' });
   const tintColor = useThemeColor({ name: 'tint' });
   const textColor = useThemeColor({ name: 'text' });
@@ -118,8 +129,10 @@ function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="Home"
       screenOptions={{
+        title: 'Home',
         tabBarActiveTintColor: tintColor,
       }}
+      sceneContainerStyle={{ backgroundColor }}
     >
       <BottomTab.Screen
         name="Home"
@@ -195,10 +208,11 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
+        name="Contacts"
+        component={ContactsScreen}
+        options={({ navigation }: RootTabScreenProps<"Contacts">) => ({
           title: "Contactos",
+          animation: 'fade',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable

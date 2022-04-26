@@ -1,7 +1,7 @@
-import { StyleSheet, useColorScheme, View } from 'react-native';
-import Colors from '../constants/Colors';
-import { Card, User } from '../types';
+import { StyleSheet, View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
+import { Card, User } from '../types';
 import { Text } from './Themed';
 
 export default function CardItem(props: { name: string, card: Card }) {
@@ -16,7 +16,10 @@ export default function CardItem(props: { name: string, card: Card }) {
   } = props;
 
   return (
-    <View style={styles.card}>
+    <Animated.View
+      style={styles.card}
+      entering={FadeInUp.duration(500)}
+    >
       <Text style={styles.title}>
         Balance
       </Text>
@@ -53,26 +56,7 @@ export default function CardItem(props: { name: string, card: Card }) {
           </Text>
         </View>
       </View>
-    </View>
-  );
-}
-
-export function CardCarousel(props: { user: User }) {
-  const { user } = props;
-
-  return (
-    <View style={{
-      width: '100%',
-      padding: 24,
-    }}>
-      {user.cards.map(card => (
-        <CardItem
-          key={card.id}
-          name={user.name}
-          card={card}
-        />
-      ))}
-    </View>
+    </Animated.View>
   );
 }
 

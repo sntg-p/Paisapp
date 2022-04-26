@@ -4,7 +4,7 @@ import ServiceList from '../components/ServiceList';
 import LastTransactionList from '../components/LastTransactionList';
 import { useUser } from '../contexts/UserContext';
 
-export default function HomeScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
   const user = useUser(state => state.user!)
 
   return (

@@ -1,7 +1,6 @@
 import {
   StyleSheet,
   Pressable,
-  useColorScheme,
   View,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
