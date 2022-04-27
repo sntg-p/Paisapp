@@ -1,5 +1,4 @@
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { useTheme } from '@react-navigation/native';
 import { useThemeColor } from "./Themed";
 
 interface CheckboxProps {
@@ -9,7 +8,7 @@ interface CheckboxProps {
 }
 
 export default function Checkbox(props: CheckboxProps) {
-  const theme = useTheme();
+  const accentColor = useThemeColor({ name: 'accent' });
   const { size = 18, text, onPress } = props;
   
   const cardColor = useThemeColor({
@@ -22,7 +21,7 @@ export default function Checkbox(props: CheckboxProps) {
       size={size}
       text={text}
       unfillColor={cardColor}
-      fillColor={theme.colors.primary}
+      fillColor={accentColor}
       iconStyle={{
         borderColor: 'transparent',
         borderRadius: 4,

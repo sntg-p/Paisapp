@@ -1,12 +1,11 @@
 import { StyleSheet, View, Pressable, TextInput } from 'react-native';
 
 import { useRef, useState } from 'react';
-import { useTheme } from '@react-navigation/native';
 import { MotiView } from 'moti';
 import { MotiPressable } from 'moti/interactions';
 import { Easing } from 'react-native-reanimated';
 
-import { Text } from '../components/Themed';
+import { Text, useThemeColor } from '../components/Themed';
 import { RootStackScreenProps, User } from '../types';
 import Checkbox from '../components/Checkbox';
 import Input from '../components/Input';
@@ -15,7 +14,8 @@ import { useUser } from '../contexts/UserContext';
 import { shadow } from '../components/Shadow';
 
 export default function LogInScreen({ navigation }: RootStackScreenProps<'LogIn'>) {
-  const theme = useTheme();
+  const accentColor = useThemeColor({ name: 'accent' });
+  const backgroundColor = useThemeColor({ name: 'background' });
   const setUser = useUser(state => state.setUser);
   const { get, post, loading } = useApi();
 
@@ -175,7 +175,7 @@ export default function LogInScreen({ navigation }: RootStackScreenProps<'LogIn'
             fontFamily: 'Poppins_500Medium',
             lineHeight: 24,
           }}>
-            No tienes cuenta? <Text style={{ color: theme.colors.primary }}>Regístrate</Text>
+            No tienes cuenta? <Text style={{ color: accentColor }}>Regístrate</Text>
           </Text>
         </Pressable>
 
@@ -187,7 +187,14 @@ export default function LogInScreen({ navigation }: RootStackScreenProps<'LogIn'
               opacity: pressed || loading ? 0.5 : 1,
             }
           }}
-          containerStyle={styles.loginButtonContainer}
+          containerStyle={{
+            width: '100%',
+            borderRadius: 16,
+            marginTop: 24,
+            backgroundColor,
+            // ...shadow(30, { color: 'hsl(217, 100%, 47%)', opacity: 0.5 }),
+            ...shadow(30),
+          }}
           style={styles.loginButton}
           onPress={handleLogIn}
           disabled={loading}
@@ -241,12 +248,5 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: "center",
     alignItems: "center",
-  },
-  loginButtonContainer: {
-    width: '100%',
-    borderRadius: 16,
-    marginTop: 24,
-    // ...shadow(30, { color: 'hsl(217, 100%, 47%)', opacity: 0.5 }),
-    ...shadow(30),
   },
 });

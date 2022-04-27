@@ -5,13 +5,12 @@ import {
   ListRenderItemInfo,
   View,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Easing } from 'react-native-reanimated';
 import { MotiView } from "moti";
 
-import { Text } from "./Themed";
+import { Text, useThemeColor } from "./Themed";
 import { Transaction, TransactionType } from "../types";
 import { useUser } from "../contexts/UserContext";
 import useApi, { ApiResponse } from "../hooks/useApi";
@@ -51,7 +50,7 @@ interface LastTransactionListProps {
 }
 
 function Footer() {
-  const theme = useTheme();
+  const textColor = useThemeColor({ name: "secondaryText" });
 
   return (
     <Pressable
@@ -63,7 +62,7 @@ function Footer() {
         alignItems: "center",
       })}
     >
-      <Text style={{ color: theme.colors.primary }}>
+      <Text style={{ color: textColor }}>
         Ver todas las transacciones
       </Text>
     </Pressable>

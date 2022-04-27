@@ -14,6 +14,8 @@ export default {
     tint: tintColorLight,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
+    brand: 'hsla(217, 100%, 47%, 1)',
+    accent: 'hsla(225, 91%, 70%, 1)',
   },
   dark: {
     text: '#fff',
@@ -26,5 +28,7 @@ export default {
     tint: tintColorDark,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
+    brand: 'hsla(217, 100%, 47%, 1)',
+    accent: 'hsla(225, 91%, 70%, 1)',
   },
 };

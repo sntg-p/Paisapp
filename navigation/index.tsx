@@ -38,8 +38,8 @@ const LightTheme: Theme = {
     ...DefaultTheme.colors,
     background: Colors.light.background,
     card: Colors.light.foreground,
-    primary: 'hsla(225, 91%, 70%, 1)',
-    text: 'hsla(215, 24%, 26%, 1)',
+    primary: Colors.light.accent,
+    text: Colors.light.text,
   },
 };
 
@@ -49,7 +49,8 @@ const DarkTheme: Theme = {
     ...DefaultDarkTheme.colors,
     background: Colors.dark.background,
     card: Colors.dark.foreground,
-    primary: 'hsla(225, 91%, 70%, 1)',
+    primary: Colors.dark.accent,
+    text: Colors.dark.text,
   },
 };
 

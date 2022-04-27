@@ -115,7 +115,7 @@ function ServiceButton(props: ServiceProps) {
         ) : icon(24, iconColor)}
       </View>
 
-      <Text style={[styles.asd, {
+      <Text style={[styles.name, {
         color: textColor
       }]}>
         {title}
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 24,
   },
-  asd: {
+  name: {
     fontFamily: "Poppins_500Medium",
     fontSize: 16,
     lineHeight: 22,
