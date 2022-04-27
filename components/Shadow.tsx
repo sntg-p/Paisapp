@@ -64,5 +64,6 @@ export function shadow(elevation: number, shadow?: {
     },
     shadowOpacity: shadow?.opacity ?? SHADOW_OPACITY,
     shadowRadius: radius,
+    elevation: elevation / 2,
   };
 }
