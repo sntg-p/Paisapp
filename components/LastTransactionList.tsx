@@ -50,7 +50,7 @@ interface LastTransactionListProps {
 }
 
 function Footer() {
-  const textColor = useThemeColor({ name: "secondaryText" });
+  const textColor = useThemeColor({ name: "accent" });
 
   return (
     <Pressable

@@ -1,8 +1,3 @@
-/**
- * If you are not familiar with React Navigation, refer to the "Fundamentals" guide:
- * https://reactnavigation.org/docs/getting-started
- *
- */
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -29,6 +24,10 @@ import { useUser } from '../contexts/UserContext';
 import { enableScreens } from 'react-native-screens';
 import { createStackNavigator } from '@react-navigation/stack';
 import Colors from '../constants/Colors';
+import { shadow } from '../components/Shadow';
+import HomeIcon from '../icons/HomeIcon';
+import DocumentIcon from '../icons/DocumentIcon';
+import LogoutIcon from '../icons/LogoutIcon';
 
 enableScreens(true);
 
@@ -114,16 +113,13 @@ function RootNavigator() {
   );
 }
 
-/**
- * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
- * https://reactnavigation.org/docs/bottom-tab-navigator
- */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const backgroundColor = useThemeColor({ name: 'background' });
+  const foregroundColor = useThemeColor({ name: 'foreground' });
   const headerColor = useThemeColor({ name: 'headerBackground' });
-  const tintColor = useThemeColor({ name: 'tint' });
+  const accentColor = useThemeColor({ name: 'accent' });
   const textColor = useThemeColor({ name: 'text' });
 
   return (
@@ -131,7 +127,11 @@ function BottomTabNavigator() {
       initialRouteName="Home"
       screenOptions={{
         title: 'Home',
-        tabBarActiveTintColor: tintColor,
+        tabBarActiveTintColor: accentColor,
+        tabBarShowLabel: false,
+        tabBarStyle: [styles.tabBar, {
+          backgroundColor: foregroundColor
+        }],
       }}
       sceneContainerStyle={{ backgroundColor }}
     >
@@ -146,10 +146,7 @@ function BottomTabNavigator() {
               height: 80,
             }}/>
           ),
-          headerStyle: {
-            borderBottomColor: 'transparent',
-            height: 80,
-          },
+          headerStyle: styles.headerStyle,
           headerTitle: () => (
             <>
               <Text style={styles.title}>
@@ -162,7 +159,7 @@ function BottomTabNavigator() {
             </>
           ),
           headerTitleContainerStyle: styles.headerTitleContainerStyle,
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => <HomeIcon color={color}/>,
           headerRight: () => (
             <View style={styles.headerRight}>
               <Pressable
@@ -202,7 +199,7 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"Contacts">) => ({
           title: "Contactos",
           animation: 'fade',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <DocumentIcon color={color}/>,
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate("Modal")}
@@ -225,7 +222,7 @@ function BottomTabNavigator() {
         component={TabTwoScreen}
         options={{
           title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <LogoutIcon color={color}/>,
         }}
       />
     </BottomTab.Navigator>
@@ -239,9 +236,8 @@ const styles = StyleSheet.create({
     marginRight: 24,
   },
   headerStyle: {
-    backgroundColor: 'hsla(0, 0%, 100%, 0.84)',
     borderBottomColor: 'transparent',
-    height: 96,
+    height: 80,
   },
   headerTitleContainerStyle: {
     marginLeft: 24,
@@ -258,14 +254,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     lineHeight: 30,
   },
+  tabBar: {
+    height: 86,
+    backgroundColor: Colors.light.foreground,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderTopColor: 'transparent',
+    ...shadow(30, { opacity: .1 }),
+  }
 });
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
-}
