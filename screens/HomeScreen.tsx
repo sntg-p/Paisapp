@@ -5,11 +5,11 @@ import LastTransactionList from '../components/LastTransactionList';
 import { useUser } from '../contexts/UserContext';
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
-  const user = useUser(state => state.user!)
+  const user = useUser(state => state.user)
 
   return (
     <LastTransactionList>
-      <CardCarousel user={user}/>
+      {user && <CardCarousel user={user}/>}
       <ServiceList/>
     </LastTransactionList>
   );

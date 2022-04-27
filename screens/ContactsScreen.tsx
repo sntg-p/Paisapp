@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View, SectionList, SectionListData, SectionListRenderItemInfo } from 'react-native';
 import ListItem from '../components/ListItem';
-import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { MotiText, MotiView } from 'moti';
 import { Easing } from 'react-native-reanimated';
@@ -14,6 +13,7 @@ import useApi, { ApiResponse } from '../hooks/useApi';
 import { FadeIn } from 'react-native-reanimated';
 import useDebounce from '../hooks/useDebounce';
 import Colors from '../constants/Colors';
+import SearchIcon from '../icons/SearchIcon';
 
 export interface Contact {
   id: number,
@@ -61,6 +61,7 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
   const textColor = useThemeColor({ name: 'baseText' });
   const dividerColor = useThemeColor({ name: 'divider' });
 
+  const loggedIn = useUser(state => state.loggedIn);
   const contacts = useUser(state => state.contacts);
   const setContacts = useUser(state => state.setContacts);
 
@@ -73,7 +74,7 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
   const { get, loading, error } = useApi();
 
   useEffect(() => {
-    if (contacts)
+    if (!loggedIn || contacts)
       return;
 
     const fetchContacts = async () => {
@@ -130,10 +131,7 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
   return (
     <>
       <MotiView
-        style={{
-          padding: 24,
-          paddingBottom: 0,
-        }}
+        style={styles.container}
         entering={FadeIn.duration(300)}
         from={{
           opacity: 0,
@@ -151,11 +149,12 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
       >
         <Input
           placeholder='Ingresa un nombre o un número'
-          left={<Feather name="search" size={24} color={textColor} />}
+          left={<SearchIcon color={textColor}/>}
+          textInputStyle={styles.searchInput}
+          value={search}
           onChangeText={(text) => {
             setSearch(text);
           }}
-          value={search}
         />
       </MotiView>
 
@@ -166,12 +165,17 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
         renderSectionHeader={renderSectionHeader}
         contentContainerStyle={styles.contentContainer}
         keyExtractor={keyExtractor}
+        fadingEdgeLength={8}
       />
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingTop: 8,
+    paddingHorizontal: 24,
+  },
   sectionTitle: {
     fontSize: 16,
     lineHeight: 22,
@@ -187,5 +191,12 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 24,
     paddingBottom: 24,
+  },
+  searchInput: {
+    fontFamily: "Poppins_500Medium",
+    height: 60,
+    borderRadius: 16,
+    fontSize: 12,
+    lineHeight: 16,
   },
 });

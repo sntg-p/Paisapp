@@ -52,9 +52,7 @@ const Input = forwardRef<TextInput, InputProps>((props, ref) => {
         </Text>
       ): null}
 
-      <View style={[styles.inputContainer, {
-        backgroundColor: cardColor,
-      }]}>
+      <View style={styles.inputContainer}>
         <TextInput
           ref={ref}
           placeholder={placeholder}
@@ -102,17 +100,16 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: "Poppins_400Regular",
+    backgroundColor: Colors.light.foreground,
     borderRadius: 12,
     padding: 16,
     width: '100%',
+    ...(shadow(30))
   },
   inputContainer: {
     flexDirection: "row",
-    backgroundColor: Colors.light.foreground,
     alignItems: "center",
     width: "100%",
-    borderRadius: 16,
-    ...(shadow(30))
   },
   left: {
     position: 'absolute',

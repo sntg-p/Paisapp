@@ -28,6 +28,9 @@ import { shadow } from '../components/Shadow';
 import HomeIcon from '../icons/HomeIcon';
 import DocumentIcon from '../icons/DocumentIcon';
 import LogoutIcon from '../icons/LogoutIcon';
+import ChevronLeftIcon from '../icons/ChevronLeftIcon';
+import NotificationIcon from '../icons/NotificationIcon';
+import SearchIcon from '../icons/SearchIcon';
 
 enableScreens(true);
 
@@ -132,6 +135,17 @@ function BottomTabNavigator() {
         tabBarStyle: [styles.tabBar, {
           backgroundColor: foregroundColor
         }],
+        headerBackground: () => (
+          <View style={{
+            height: 80,
+          }}/>
+        ),
+        headerStyle: styles.headerStyle,
+        headerTitle: ({ children }) => (
+          <Text style={styles.title}>
+            {children}
+          </Text>
+        )
       }}
       sceneContainerStyle={{ backgroundColor }}
     >
@@ -143,17 +157,17 @@ function BottomTabNavigator() {
           headerBackground: () => (
             <View style={{
               backgroundColor: headerColor,
-              height: 80,
+              height: 96,
             }}/>
           ),
-          headerStyle: styles.headerStyle,
+          headerStyle: styles.homeHeaderStyle,
           headerTitle: () => (
             <>
-              <Text style={styles.title}>
+              <Text style={styles.homeTitle} allowFontScaling={false}>
                 Hola
               </Text>
 
-              <Text style={styles.subtitle}>
+              <Text style={styles.homeSubtitle} allowFontScaling={false}>
                 Soy Paisanx
               </Text>
             </>
@@ -169,25 +183,17 @@ function BottomTabNavigator() {
                   margin: 12,
                 })}
               >
-                <FontAwesome
-                  name="search"
-                  size={25}
-                  color={textColor}
-                />
+                <SearchIcon color={textColor}/>
               </Pressable>
 
               <Pressable
                 onPress={() => navigation.navigate("Modal")}
                 style={({ pressed }) => ({
                   opacity: pressed ? 0.5 : 1,
-                  margin: 12,
+                  padding: 12,
                 })}
               >
-                <FontAwesome
-                  name="bell-o"
-                  size={25}
-                  color={textColor}
-                />
+                <NotificationIcon color={textColor}/>
               </Pressable>
             </View>
           ),
@@ -200,28 +206,27 @@ function BottomTabNavigator() {
           title: "Contactos",
           animation: 'fade',
           tabBarIcon: ({ color }) => <DocumentIcon color={color}/>,
-          headerRight: () => (
+          headerLeft: () => (
             <Pressable
-              onPress={() => navigation.navigate("Modal")}
+              onPress={() => navigation.goBack()}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
+                marginLeft: 24,
               })}
             >
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={textColor}
-                style={{ marginRight: 15 }}
-              />
+              <ChevronLeftIcon color={textColor}/>
             </Pressable>
           ),
+          headerTitleContainerStyle: {
+            marginLeft: 24,
+          }
         })}
       />
       <BottomTab.Screen
         name="TabTwo"
         component={TabTwoScreen}
         options={{
-          title: "Tab Two",
+          title: "Cerrar sesión",
           tabBarIcon: ({ color }) => <LogoutIcon color={color}/>,
         }}
       />
@@ -232,12 +237,17 @@ function BottomTabNavigator() {
 const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: 'transparent',
     marginRight: 24,
   },
   headerStyle: {
     borderBottomColor: 'transparent',
     height: 80,
+  },
+  homeHeaderStyle: {
+    borderBottomColor: 'transparent',
+    height: 96,
   },
   headerTitleContainerStyle: {
     marginLeft: 24,
@@ -246,10 +256,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Poppins_500Medium",
+    fontSize: 22,
+    lineHeight: 28,
+  },
+  homeTitle: {
+    fontFamily: "Poppins_500Medium",
     fontSize: 16,
     lineHeight: 30,
   },
-  subtitle:{
+  homeSubtitle:{
     fontFamily: "Poppins_600SemiBold",
     fontSize: 22,
     lineHeight: 30,

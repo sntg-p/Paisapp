@@ -102,13 +102,14 @@ function renderItem({ item, index }: ListRenderItemInfo<Transaction>) {
 const keyExtractor = (item: Transaction): string => item.title + item.description;
 
 export default function LastTransactionList({ children }: LastTransactionListProps) {
+  const loggedIn = useUser(state => state.loggedIn);
   const transactions = useUser(state => state.transactions);
   const setTransactions = useUser(state => state.setTransactions);
   const [errorMessage, setError] = useState('');
   const { get, loading, error } = useApi();
 
   useEffect(() => {
-    if (transactions)
+    if (!loggedIn || transactions)
       return;
 
     const fetchTransactions = async () => {
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   contentContainer: {
-    paddingTop: 80,
+    paddingTop: 96,
     paddingHorizontal: 24,
   },
 });
