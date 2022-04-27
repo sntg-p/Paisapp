@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
 
-import { Card, User } from '../types';
+import { Card } from '../types';
+import { shadow } from './Shadow';
 import { Text } from './Themed';
 
 export default function CardItem(props: { name: string, card: Card }) {
@@ -16,9 +16,8 @@ export default function CardItem(props: { name: string, card: Card }) {
   } = props;
 
   return (
-    <Animated.View
+    <View
       style={styles.card}
-      entering={FadeInUp.duration(500)}
     >
       <Text style={styles.title}>
         Balance
@@ -56,7 +55,7 @@ export default function CardItem(props: { name: string, card: Card }) {
           </Text>
         </View>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 
@@ -68,6 +67,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 12,
     width: 344,
+    ...(shadow(30)),
   },
   title: {
     color: 'white',

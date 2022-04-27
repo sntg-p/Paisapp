@@ -1,16 +1,16 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
 import {
   StyleProp,
   StyleSheet,
   TextInput,
   TextStyle,
   View,
-  Pressable,
   TextInputProps,
 } from "react-native";
-import Shadow from '../components/Shadow';
+import { shadow } from '../components/Shadow';
 
 import { Text, useThemeColor } from '../components/Themed';
+import Colors from '../constants/Colors';
 
 interface InputProps {
   label?: string;
@@ -52,46 +52,37 @@ const Input = forwardRef<TextInput, InputProps>((props, ref) => {
         </Text>
       ): null}
 
-      <Shadow>
-        <Pressable
-          style={({ pressed }) => ({
-            flexDirection: "row",
-            backgroundColor: cardColor,
-            alignItems: "center",
-            width: "100%",
-            borderRadius: 16,
-            opacity: pressed ? 0.5 : 1,
-          })}
-        >
-          <TextInput
-            ref={ref}
-            placeholder={placeholder}
-            placeholderTextColor={'#AAAAAA'}
-            secureTextEntry={secureTextEntry}
-            style={[
-              styles.input,
-              {
-                paddingLeft: left ? 52 : 24,
-                backgroundColor: cardColor,
-                color: textColor,
-              },
-              textInputStyle
-            ]}
-            onChangeText={onChangeText}
-            onSubmitEditing={onSubmitEditing}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            defaultValue={defaultValue}
-            value={value}
-          ></TextInput>
+      <View style={[styles.inputContainer, {
+        backgroundColor: cardColor,
+      }]}>
+        <TextInput
+          ref={ref}
+          placeholder={placeholder}
+          placeholderTextColor={'#AAAAAA'}
+          secureTextEntry={secureTextEntry}
+          style={[
+            styles.input,
+            {
+              paddingLeft: left ? 52 : 24,
+              backgroundColor: cardColor,
+              color: textColor,
+            },
+            textInputStyle
+          ]}
+          onChangeText={onChangeText}
+          onSubmitEditing={onSubmitEditing}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          defaultValue={defaultValue}
+          value={value}
+        ></TextInput>
 
-          {left ? (
-            <View style={styles.left}>
-              {left}
-            </View>
-          ) : null}
-        </Pressable>
-      </Shadow>
+        {left ? (
+          <View style={styles.left}>
+            {left}
+          </View>
+        ) : null}
+      </View>
     </View>
   );
 });
@@ -114,6 +105,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     width: '100%',
+  },
+  inputContainer: {
+    flexDirection: "row",
+    backgroundColor: Colors.light.foreground,
+    alignItems: "center",
+    width: "100%",
+    borderRadius: 16,
+    ...(shadow(30))
   },
   left: {
     position: 'absolute',

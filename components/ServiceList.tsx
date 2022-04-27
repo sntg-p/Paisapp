@@ -3,11 +3,12 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { Shadow } from 'react-native-shadow-2';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import { Easing } from 'react-native-reanimated';
 
 import { useThemeColor } from './Themed';
 import { Text } from './Themed';
+import { MotiView } from 'moti';
+import { shadow } from './Shadow';
 
 const services: ServiceProps[] = [
   {
@@ -34,9 +35,22 @@ const services: ServiceProps[] = [
 
 export default function ServiceList() {
   return (
-    <Animated.View
+    <MotiView
       style={styles.container}
-      entering={FadeInUp.delay(150).duration(300)}
+      from={{
+        opacity: 0,
+        transform: [{ translateY: 50 }],
+      }}
+      animate={{
+        opacity: 1,
+        transform: [{ translateY: 0 }],
+      }}
+      transition={{
+        type: 'timing',
+        delay: 150,
+        duration: 300,
+        easing: Easing.out(Easing.ease)
+      }}
     >
       <Text style={styles.title}>
         Servicios
@@ -51,7 +65,7 @@ export default function ServiceList() {
           <ServiceButton key={service.title} {...service}/>
         ))}
       </View>
-    </Animated.View>
+    </MotiView>
   );
 }
 
@@ -83,32 +97,23 @@ function ServiceButton(props: ServiceProps) {
         opacity: pressed ? 0.5 : 1,
       })}
     >
-      <Shadow
-        viewStyle={{
-          alignSelf: 'stretch',
-        }}
-        radius={16}
-        startColor="hsla(0, 0%, 0%, 0.06)"
-        offset={[0, 8]}
-        distance={30}
-      >
-        <View style={{
-          backgroundColor,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: 16,
-          height: 64,
-          width: 64,
-        }}>
-          {typeof icon === 'string' ? (
-            <FontAwesome5
-              name="wallet"
-              size={24}
-              style={{ color: iconColor }}
-            />
-          ) : icon(24, iconColor)}
-        </View>
-      </Shadow>
+      <View style={{
+        backgroundColor,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 16,
+        height: 64,
+        width: 64,
+        ...(shadow(30)),
+      }}>
+        {typeof icon === 'string' ? (
+          <FontAwesome5
+            name="wallet"
+            size={24}
+            style={{ color: iconColor }}
+          />
+        ) : icon(24, iconColor)}
+      </View>
 
       <Text style={[styles.asd, {
         color: textColor
@@ -128,7 +133,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_500Medium",
     fontSize: 20,
     lineHeight: 26,
-    marginTop: 32,
+    marginTop: 8,
     marginBottom: 24,
   },
   asd: {

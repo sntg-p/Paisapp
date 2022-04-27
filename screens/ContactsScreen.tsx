@@ -1,15 +1,17 @@
-import { useEffect, useState } from 'react';
-import { StyleSheet, View, SectionList } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, View, SectionList, SectionListData, SectionListRenderItemInfo } from 'react-native';
 import ListItem from '../components/ListItem';
 import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { MotiText, MotiView } from 'moti';
+import { Easing } from 'react-native-reanimated';
 
 import { useThemeColor } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Input from '../components/Input';
 import { useUser } from '../contexts/UserContext';
 import useApi, { ApiResponse } from '../hooks/useApi';
-import Animated, { FadeIn, Layout, SlideInLeft } from 'react-native-reanimated';
+import { FadeIn } from 'react-native-reanimated';
 import useDebounce from '../hooks/useDebounce';
 import Colors from '../constants/Colors';
 
@@ -20,6 +22,40 @@ export interface Contact {
   phone: string,
   contacted: string,
 }
+
+const renderItem = ({ item: { name, lastName, phone }, index }: SectionListRenderItemInfo<Contact>) => (
+  <MotiView
+    from={{
+      opacity: 0,
+      transform: [{ translateX: -50 }],
+    }}
+    animate={{
+      opacity: 1,
+      transform: [{ translateX: 0 }],
+    }}
+    transition={{
+      type: 'timing',
+      duration: 300,
+      delay: 100 + index * 50,
+      easing: Easing.out(Easing.ease)
+    }}
+  >
+    <ListItem
+      title={`${name} ${lastName}`}
+      description={phone}
+      hue={197}
+      icon={(size, color) => (<Ionicons name="person" size={size} color={color} />)} />
+  </MotiView>
+);
+
+const ItemSeparatorComponent = (
+  <View style={{
+    height: 16,
+    backgroundColor: 'transparent'
+  }}/>
+);
+
+const keyExtractor = ({ id, name, lastName }: Contact) => `${id}-${name}-${lastName}`;
 
 export default function ContactsScreen({ navigation }: RootTabScreenProps<'Contacts'>) {
   const textColor = useThemeColor({ name: 'baseText' });
@@ -66,14 +102,52 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
   else if (error)
     text = error.message;
 
+  const renderSectionHeader = ({ section }: { section: SectionListData<Contact>}) => (
+    <MotiText
+      style={[styles.sectionTitle, {
+        color: textColor,
+        borderBottomColor: dividerColor,
+      }]}
+      from={{
+        opacity: 0,
+        transform: [{ translateX: -50 }],
+      }}
+      animate={{
+        opacity: 1,
+        transform: [{ translateX: 0 }],
+      }}
+      transition={{
+        type: 'timing',
+        duration: 300,
+        delay: 50,
+        easing: Easing.out(Easing.ease)
+      }}
+    >
+      {section.title}
+    </MotiText>
+  );
+
   return (
     <>
-      <Animated.View
+      <MotiView
         style={{
           padding: 24,
           paddingBottom: 0,
         }}
         entering={FadeIn.duration(300)}
+        from={{
+          opacity: 0,
+          transform: [{ translateX: -50 }],
+        }}
+        animate={{
+          opacity: 1,
+          transform: [{ translateX: 0 }],
+        }}
+        transition={{
+          type: 'timing',
+          duration: 300,
+          easing: Easing.out(Easing.ease)
+        }}
       >
         <Input
           placeholder='Ingresa un nombre o un número'
@@ -83,46 +157,15 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
           }}
           value={search}
         />
-      </Animated.View>
+      </MotiView>
 
       <SectionList
         sections={filteredContacts || contacts || []}
-        ItemSeparatorComponent={() => (
-          <View style={{
-            height: 16,
-            backgroundColor: 'transparent'
-          }}/>
-        )}
-        renderItem={({ item: { name, lastName, phone }, index }) => (
-          <Animated.View
-            entering={SlideInLeft.delay(80 + index * 25).duration(300)}
-            exiting={SlideInLeft.duration(300)}
-            layout={Layout.springify()}
-          >
-            <ListItem
-              title={`${name} ${lastName}`}
-              description={phone}
-              hue={197}
-              icon={(size, color) => (<Ionicons name="person" size={size} color={color} />)}
-            />
-          </Animated.View>
-        )}
-        renderSectionHeader={({ section }) => (
-          <Animated.Text
-            entering={SlideInLeft.delay(50).duration(300)}
-            style={[styles.sectionTitle, {
-              color: textColor,
-              borderBottomColor: dividerColor,
-            }]}
-          >
-            {section.title}
-          </Animated.Text>
-        )}
-        contentContainerStyle={{
-          paddingHorizontal: 24,
-          paddingBottom: 24,
-        }}
-        keyExtractor={({ id, name, lastName }) => `${id}-${name}-${lastName}`}
+        ItemSeparatorComponent={() => ItemSeparatorComponent}
+        renderItem={renderItem}
+        renderSectionHeader={renderSectionHeader}
+        contentContainerStyle={styles.contentContainer}
+        keyExtractor={keyExtractor}
       />
     </>
   );
@@ -140,5 +183,9 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     borderBottomColor: Colors.light.divider,
     borderBottomWidth: 1,
+  },
+  contentContainer: {
+    paddingHorizontal: 24,
+    paddingBottom: 24,
   },
 });

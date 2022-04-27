@@ -1,14 +1,18 @@
 import { StyleSheet, View, Pressable, TextInput } from 'react-native';
 
+import { useRef, useState } from 'react';
+import { useTheme } from '@react-navigation/native';
+import { MotiView } from 'moti';
+import { MotiPressable } from 'moti/interactions';
+import { Easing } from 'react-native-reanimated';
+
 import { Text } from '../components/Themed';
 import { RootStackScreenProps, User } from '../types';
-import { useTheme } from '@react-navigation/native';
 import Checkbox from '../components/Checkbox';
 import Input from '../components/Input';
 import useApi, { ApiResponse } from '../hooks/useApi';
-import { useRef, useState } from 'react';
 import { useUser } from '../contexts/UserContext';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import { shadow } from '../components/Shadow';
 
 export default function LogInScreen({ navigation }: RootStackScreenProps<'LogIn'>) {
   const theme = useTheme();
@@ -24,7 +28,7 @@ export default function LogInScreen({ navigation }: RootStackScreenProps<'LogIn'
   const handleLogIn = () => {
     setError(undefined);
 
-    (async () => {
+    const login = async () => {
       const login: ApiResponse = await post('/login', { email, password });
 
       if (login.success) {
@@ -45,29 +49,56 @@ export default function LogInScreen({ navigation }: RootStackScreenProps<'LogIn'
         setError(login.error);
         console.log(login.error);
       }
-    })();
+    };
+
+    login();
   };
 
   return (
     <View style={styles.container}>
-      <Animated.View
+      <MotiView
         style={{
           alignItems: 'center',
           justifyContent: 'center',
         }}
-        entering={FadeInDown.duration(500)}
+        from={{
+          opacity: 0,
+          transform: [{ translateY: 50 }],
+        }}
+        animate={{
+          opacity: 1,
+          transform: [{ translateY: 0 }],
+        }}
+        transition={{
+          type: 'timing',
+          duration: 500,
+          easing: Easing.out(Easing.ease)
+        }}
       >
         <View style={styles.iconBackground}/>
         <Text style={styles.title}>Paisapp</Text>
         <Text style={styles.subtitle}>Comienza a manejar tu vida financiera</Text>
-      </Animated.View>
+      </MotiView>
 
-      <Animated.View
+      <MotiView
         style={{
           width: '100%',
           paddingHorizontal: 24,
         }}
-        entering={FadeInDown.delay(25).duration(500)}
+        from={{
+          opacity: 0,
+          transform: [{ translateY: 50 }],
+        }}
+        animate={{
+          opacity: 1,
+          transform: [{ translateY: 0 }],
+        }}
+        transition={{
+          type: 'timing',
+          delay: 100,
+          duration: 500,
+          easing: Easing.out(Easing.ease)
+        }}
       >
         <Input
           label='Email'
@@ -89,18 +120,35 @@ export default function LogInScreen({ navigation }: RootStackScreenProps<'LogIn'
 
         <View style={{ height: 16 }}/>
         <Checkbox text="Recordarme"/>
-      </Animated.View>
+      </MotiView>
 
       <View style={{ flex: 1 }}/>
 
-      <Animated.View
+      <MotiView
         style={{
           paddingHorizontal: 24,
           paddingBottom: 36,
           justifyContent: 'center',
           alignItems: 'center',
         }}
-        entering={FadeInDown.delay(50).duration(500)}
+        from={{
+          opacity: 0,
+          transform: [{ translateY: 50 }],
+        }}
+        animate={{
+          opacity: 1,
+          transform: [{ translateY: 0 }],
+        }}
+        exit={{
+          opacity: 0,
+          transform: [{ translateY: 50 }],
+        }}
+        transition={{
+          type: 'timing',
+          delay: 200,
+          duration: 500,
+          easing: Easing.out(Easing.ease)
+        }}
       >
         {error ? (
           <Text style={{
@@ -131,30 +179,24 @@ export default function LogInScreen({ navigation }: RootStackScreenProps<'LogIn'
           </Text>
         </Pressable>
 
-        <Pressable
-          style={({ pressed }) => ({
-            opacity: pressed ? 0.5 : 1,
-            width: '100%',
-            borderRadius: 16,
-            marginTop: 24,
-            height: 60,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: !loading ? 'hsla(217, 100%, 47%, 1)' : theme.colors.primary,
-          })}
+        <MotiPressable
+          animate={({ pressed }) => {
+            'worklet';
+
+            return {
+              opacity: pressed || loading ? 0.5 : 1,
+            }
+          }}
+          containerStyle={styles.loginButtonContainer}
+          style={styles.loginButton}
           onPress={handleLogIn}
           disabled={loading}
         >
-          <Text style={{
-            color: 'white',
-            fontSize: 16,
-            fontFamily: 'Poppins_600SemiBold',
-            lineHeight: 22,
-          }}>
+          <Text style={styles.buttonText}>
             {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </Text>
-        </Pressable>
-      </Animated.View>
+        </MotiPressable>
+      </MotiView>
     </View>
   );
 }
@@ -163,6 +205,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 128,
+    overflow: 'hidden',
   },
   title: {
     fontFamily: "Poppins_500Medium",
@@ -183,5 +226,27 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     width: 48,
     height: 48,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'Poppins_600SemiBold',
+    lineHeight: 22,
+  },
+  loginButton: {
+    width: '100%',
+    backgroundColor: 'hsla(217, 100%, 47%, 1)',
+    borderRadius: 16,
+    height: 60,
+    padding: 16,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loginButtonContainer: {
+    width: '100%',
+    borderRadius: 16,
+    marginTop: 24,
+    // ...shadow(30, { color: 'hsl(217, 100%, 47%)', opacity: 0.5 }),
+    ...shadow(30),
   },
 });

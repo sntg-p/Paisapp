@@ -5,19 +5,25 @@ import {
   ListRenderItemInfo,
   View,
 } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import Animated, { Layout, SlideInLeft } from 'react-native-reanimated';
+import { Easing } from 'react-native-reanimated';
+import { MotiView } from "moti";
 
 import { Text } from "./Themed";
-import { useTheme } from "@react-navigation/native";
 import { Transaction, TransactionType } from "../types";
 import { useUser } from "../contexts/UserContext";
 import useApi, { ApiResponse } from "../hooks/useApi";
 import { ReactNode, useEffect, useState } from "react";
 import ListItem from "./ListItem";
 
-const icons: { [key in TransactionType]: { hue: number, icon: (size: number, color: string) => React.ReactNode } } = {
+const icons: {
+  [key in TransactionType]: {
+    hue: number,
+    icon: (size: number, color: string) => React.ReactNode
+  }
+} = {
   PAYMENT: {
     hue: 264,
     icon: (size, color) => (
@@ -33,66 +39,15 @@ const icons: { [key in TransactionType]: { hue: number, icon: (size: number, col
   },
 }
 
+const ItemSeparatorComponent = (
+  <View style={{
+    height: 16,
+    backgroundColor: "transparent",
+  }}/>
+);
+
 interface LastTransactionListProps {
   children?: ReactNode;
-}
-
-export default function LastTransactionList({ children }: LastTransactionListProps) {
-  const transactions = useUser(state => state.transactions);
-  const setTransactions = useUser(state => state.setTransactions);
-  const [errorMessage, setError] = useState('');
-  const { get, loading, error } = useApi();
-
-  useEffect(() => {
-    if (transactions)
-      return;
-
-    const fetchTransactions = async () => {
-      const transactions: ApiResponse<Transaction[]> = await get('/transactions')
-
-      if (transactions.success) {
-        setTransactions(transactions.data);
-      } else if (transactions.error) {
-        setError(transactions.error);
-      }
-    };
-
-    fetchTransactions();
-  }, [transactions]);
-
-  let text = 'Cargando últimas transacciones...';
-
-  if (loading)
-    text = 'Cargando últimas transacciones...';
-  else if (errorMessage)
-    text = errorMessage;
-  else if (error)
-    text = error.message;
-
-  return (
-    <FlatList
-      ListHeaderComponent={
-        <>
-          {children}
-          <Text style={styles.title}>Últimas transacciones</Text>
-        </>
-      }
-      data={transactions}
-      ItemSeparatorComponent={() => (
-        <View style={{
-          height: 16,
-          backgroundColor: "transparent",
-        }}/>
-      )}
-      ListFooterComponent={Footer}
-      renderItem={renderItem}
-      contentContainerStyle={{
-        paddingTop: 102,
-        paddingHorizontal: 24,
-      }}
-      keyExtractor={(item) => item.title + item.description}
-    />
-  );
 }
 
 function Footer() {
@@ -119,9 +74,21 @@ function renderItem({ item, index }: ListRenderItemInfo<Transaction>) {
   const { hue, icon } = icons[item.type];
 
   return (
-    <Animated.View
-      entering={SlideInLeft.delay(100 + index * 50).duration(300)}
-      layout={Layout.springify()}
+    <MotiView
+      from={{
+        opacity: 0,
+        transform: [{ translateX: -50 }],
+      }}
+      animate={{
+        opacity: 1,
+        transform: [{ translateX: 0 }],
+      }}
+      transition={{
+        type: 'timing',
+        duration: 300,
+        delay: index * 100,
+        easing: Easing.out(Easing.ease)
+      }}
     >
       <ListItem
         {...item}
@@ -129,7 +96,50 @@ function renderItem({ item, index }: ListRenderItemInfo<Transaction>) {
         icon={icon}
         right={`$${item.total}`}
       />
-    </Animated.View>
+    </MotiView>
+  );
+}
+
+const keyExtractor = (item: Transaction): string => item.title + item.description;
+
+export default function LastTransactionList({ children }: LastTransactionListProps) {
+  const transactions = useUser(state => state.transactions);
+  const setTransactions = useUser(state => state.setTransactions);
+  const [errorMessage, setError] = useState('');
+  const { get, loading, error } = useApi();
+
+  useEffect(() => {
+    if (transactions)
+      return;
+
+    const fetchTransactions = async () => {
+      const transactions: ApiResponse<Transaction[]> = await get('/transactions')
+
+      if (transactions.success) {
+        setTransactions(transactions.data);
+      } else if (transactions.error) {
+        setError(transactions.error);
+      }
+    };
+
+    fetchTransactions();
+  }, [transactions]);
+
+  return (
+    <FlatList
+      ListHeaderComponent={
+        <>
+          {children}
+          <Text style={styles.title}>Últimas transacciones</Text>
+        </>
+      }
+      data={transactions}
+      ItemSeparatorComponent={() => ItemSeparatorComponent}
+      ListFooterComponent={Footer}
+      renderItem={renderItem}
+      contentContainerStyle={styles.contentContainer}
+      keyExtractor={keyExtractor}
+    />
   );
 }
 
@@ -139,5 +149,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 26,
     paddingBottom: 24,
+  },
+  contentContainer: {
+    paddingTop: 80,
+    paddingHorizontal: 24,
   },
 });

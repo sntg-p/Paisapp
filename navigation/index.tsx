@@ -10,9 +10,7 @@ import {
   DefaultTheme,
   DarkTheme as DefaultDarkTheme,
   Theme,
-  useTheme
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable, View } from 'react-native';
 
@@ -30,6 +28,7 @@ import { useUser } from '../contexts/UserContext';
 
 import { enableScreens } from 'react-native-screens';
 import { createStackNavigator } from '@react-navigation/stack';
+import Colors from '../constants/Colors';
 
 enableScreens(true);
 
@@ -37,7 +36,8 @@ const LightTheme: Theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: 'white',
+    background: Colors.light.background,
+    card: Colors.light.foreground,
     primary: 'hsla(225, 91%, 70%, 1)',
     text: 'hsla(215, 24%, 26%, 1)',
   },
@@ -47,8 +47,8 @@ const DarkTheme: Theme = {
   ...DefaultDarkTheme,
   colors: {
     ...DefaultDarkTheme.colors,
-    background: 'hsl(0, 0%, 6%)',
-    card: 'hsl(0, 0%, 8%)',
+    background: Colors.dark.background,
+    card: Colors.dark.foreground,
     primary: 'hsla(225, 91%, 70%, 1)',
   },
 };
@@ -142,32 +142,20 @@ function BottomTabNavigator() {
           headerBackground: () => (
             <View style={{
               backgroundColor: headerColor,
-              height: 96,
+              height: 80,
             }}/>
           ),
           headerStyle: {
             borderBottomColor: 'transparent',
-            height: 96,
+            height: 80,
           },
           headerTitle: () => (
             <>
-              <Text
-                style={{
-                  fontFamily: "Poppins_500Medium",
-                  fontSize: 16,
-                  lineHeight: 30,
-                }}
-              >
+              <Text style={styles.title}>
                 Hola
               </Text>
 
-              <Text
-                style={{
-                  fontFamily: "Poppins_600SemiBold",
-                  fontSize: 22,
-                  lineHeight: 30,
-                }}
-              >
+              <Text style={styles.subtitle}>
                 Soy Paisanx
               </Text>
             </>
@@ -258,7 +246,17 @@ const styles = StyleSheet.create({
     marginLeft: 24,
     marginRight: 24,
     backgroundColor: 'transparent',
-  }
+  },
+  title: {
+    fontFamily: "Poppins_500Medium",
+    fontSize: 16,
+    lineHeight: 30,
+  },
+  subtitle:{
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 22,
+    lineHeight: 30,
+  },
 });
 
 /**

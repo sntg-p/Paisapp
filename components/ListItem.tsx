@@ -5,9 +5,8 @@ import {
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-import { useThemeColor } from "./Themed";
-import { Text } from "./Themed";
-import Shadow from "./Shadow";
+import { Text, useThemeColor } from "./Themed";
+import { shadow } from "./Shadow";
 
 interface ListItemProps {
   icon: string | ((size: number, color: string) => React.ReactNode);
@@ -35,58 +34,57 @@ export default function ListItem(props: ListItemProps) {
   const cardColor = useThemeColor({ name: "foreground" });
 
   return (
-    <Shadow>
-      <Pressable
-        style={({ pressed }) => ({
-          flexDirection: "row",
-          backgroundColor: cardColor,
-          alignItems: "center",
-          width: "100%",
-          paddingVertical: 24,
-          paddingHorizontal: 16,
-          borderRadius: 16,
-          opacity: pressed ? 0.5 : 1,
-        })}
-      >
-        <View style={[styles.iconContainer, {
-          backgroundColor: iconBackgroundColor
+    <Pressable
+      style={({ pressed }) => ({
+        flexDirection: "row",
+        backgroundColor: cardColor,
+        alignItems: "center",
+        width: "100%",
+        paddingVertical: 24,
+        paddingHorizontal: 16,
+        borderRadius: 16,
+        opacity: pressed ? 0.5 : 1,
+        ...(shadow(30))
+      })}
+    >
+      <View style={[styles.iconContainer, {
+        backgroundColor: iconBackgroundColor
+      }]}>
+        {typeof icon === "string" ? (
+          <FontAwesome5
+            name={icon}
+            size={18}
+            style={{ color: iconColor }}
+          />
+        ) : (
+          icon(18, iconColor)
+        )}
+      </View>
+
+      <View style={styles.textContainer}>
+        <Text style={[styles.title, {
+          color: textColor,
         }]}>
-          {typeof icon === "string" ? (
-            <FontAwesome5
-              name={icon}
-              size={18}
-              style={{ color: iconColor }}
-            />
-          ) : (
-            icon(18, iconColor)
-          )}
-        </View>
+          {title}
+        </Text>
 
-        <View style={styles.textContainer}>
-          <Text style={[styles.title, {
-            color: textColor,
+        {description ? (
+          <Text style={[styles.subtitle, {
+            color: subColor,
           }]}>
-            {title}
-          </Text>
-
-          {description ? (
-            <Text style={[styles.subtitle, {
-              color: subColor,
-            }]}>
-              {description}
-            </Text>
-          ) : null}
-        </View>
-
-        {right ? (
-          <Text style={[styles.right, {
-            color: iconColor,
-          }]}>
-            {right}
+            {description}
           </Text>
         ) : null}
-      </Pressable>
-    </Shadow>
+      </View>
+
+      {right ? (
+        <Text style={[styles.right, {
+          color: iconColor,
+        }]}>
+          {right}
+        </Text>
+      ) : null}
+    </Pressable>
   );
 }
 
