@@ -121,12 +121,23 @@ export default function LastTransactionList({ children }: LastTransactionListPro
     fetchTransactions();
   }, [transactions]);
 
+  useEffect(() => {
+    if (error) setError(error.message);
+  }, [error]);
+
+  const subtitleColor = useThemeColor({ name: "secondaryText" });
+
   return (
     <FlatList
       ListHeaderComponent={
         <>
           {children}
           <Text style={styles.title}>Últimas transacciones</Text>
+          {loading || errorMessage ? (
+            <Text style={[styles.title, { color: subtitleColor }]}>
+              {loading ? 'Cargando...' : errorMessage}
+            </Text>
+          ): null}
         </>
       }
       data={transactions}

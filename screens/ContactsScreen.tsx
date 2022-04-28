@@ -82,6 +82,7 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
 
       if (contacts.success) {
         setContacts(contacts.data);
+        setError('');
       } else if (contacts.error) {
         setError(contacts.error);
       }
@@ -89,6 +90,10 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
 
     fetchContacts();
   }, [contacts]);
+
+  useEffect(() => {
+    if (error) setError(error.message);
+  }, [error]);
 
   useDebounce(() => {
     setContactsFilter(search);
@@ -149,8 +154,11 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
         }}
       >
         <Input
-          placeholder='Ingresa un nombre o un número'
-          left={<SearchIcon color={textColor}/>}
+          placeholder={loading ?
+            'Cargando contactos...' :
+            errorMessage || 'Ingresa un nombre o un número'
+          }
+          left={!errorMessage ? <SearchIcon color={textColor}/> : undefined}
           textInputStyle={styles.searchInput}
           value={search}
           onChangeText={(text) => {
