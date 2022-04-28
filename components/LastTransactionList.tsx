@@ -5,8 +5,6 @@ import {
   ListRenderItemInfo,
   View,
 } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 import { Easing } from 'react-native-reanimated';
 import { MotiView } from "moti";
 
@@ -16,6 +14,8 @@ import { useUser } from "../contexts/UserContext";
 import useApi, { ApiResponse } from "../hooks/useApi";
 import { ReactNode, useEffect, useState } from "react";
 import ListItem from "./ListItem";
+import DebitIcon from "../icons/DebitIcon";
+import PaymentIcon from "../icons/PaymentIcon";
 
 const icons: {
   [key in TransactionType]: {
@@ -25,16 +25,12 @@ const icons: {
 } = {
   PAYMENT: {
     hue: 264,
-    icon: (size, color) => (
-      <FontAwesome5 name="wallet" size={size} style={{ color }}/>
-    )
+    icon: (_, color) => (<PaymentIcon color={color} />),
   },
 
   DEBIT: {
     hue: 147,
-    icon: (size, color) => (
-      <Entypo name="arrow-down" size={size} color={color} />
-    )
+    icon: (_, color) => (<DebitIcon color={color} />),
   },
 }
 

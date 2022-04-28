@@ -9,26 +9,30 @@ import { useThemeColor } from './Themed';
 import { Text } from './Themed';
 import { MotiView } from 'moti';
 import { shadow } from './Shadow';
+import WalletIcon from '../icons/WalletIcon';
+import TransferIcon from '../icons/TransferIcon';
+import PayIcon from '../icons/PayIcon';
+import TopupIcon from '../icons/TopupIcon';
 
 const services: ServiceProps[] = [
   {
     title: 'Billetera',
-    icon: 'wallet',
+    icon: (_, color) => (<WalletIcon color={color} />),
     hue: 147
   },
   {
     title: 'Transferir',
-    icon: (size, color) => <MaterialIcons name="swap-vert" size={size} color={color}/>,
+    icon: (_, color) => (<TransferIcon color={color} />),
     hue: 28
   },
   {
     title: 'Pagar',
-    icon: (size, color) => <FontAwesome name="file-text" size={size} color={color}/>,
+    icon: (_, color) => (<PayIcon color={color} />),
     hue: 277
   },
   {
     title: 'Recargar',
-    icon: (size, color) => <Feather name="smartphone" size={size} color={color}/>,
+    icon: (_, color) => (<TopupIcon color={color} />),
     hue: 195
   },
 ]
@@ -81,12 +85,12 @@ function ServiceButton(props: ServiceProps) {
   const colorScheme = useColorScheme();
 
   const iconColor = colorScheme === 'dark' ?
-    `hsla(${hue}, 36%, 48%, 1)` :
-    `hsla(${hue}, 64%, 64%, 1)`;
+    `hsl(${hue}, 36%, 48%)` :
+    `hsl(${hue}, 64%, 64%)`;
 
   const backgroundColor = colorScheme === 'dark' ?
-    `hsla(${hue}, 24%, 12%, 1)` :
-    `hsla(${hue}, 100%, 95%, 1)`;
+    `hsl(${hue}, 24%, 12%)` :
+    `hsl(${hue}, 100%, 95%)`;
 
   const textColor = useThemeColor({ name: 'secondaryText' });
 
@@ -108,7 +112,7 @@ function ServiceButton(props: ServiceProps) {
       }}>
         {typeof icon === 'string' ? (
           <FontAwesome5
-            name="wallet"
+            name={icon}
             size={24}
             style={{ color: iconColor }}
           />

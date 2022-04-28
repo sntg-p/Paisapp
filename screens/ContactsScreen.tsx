@@ -94,15 +94,6 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
     setContactsFilter(search);
   }, search, 200);
 
-  let text = '';
-
-  if (loading)
-    text = 'Cargando últimas transacciones...';
-  else if (errorMessage)
-    text = errorMessage;
-  else if (error)
-    text = error.message;
-
   const renderSectionHeader = ({ section }: { section: SectionListData<Contact>}) => (
     <MotiText
       style={[styles.sectionTitle, {
@@ -130,6 +121,16 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
 
   return (
     <>
+      <SectionList
+        sections={filteredContacts || contacts || []}
+        ItemSeparatorComponent={() => ItemSeparatorComponent}
+        renderItem={renderItem}
+        renderSectionHeader={renderSectionHeader}
+        contentContainerStyle={styles.contentContainer}
+        keyExtractor={keyExtractor}
+        fadingEdgeLength={8}
+      />
+
       <MotiView
         style={styles.container}
         entering={FadeIn.duration(300)}
@@ -157,16 +158,6 @@ export default function ContactsScreen({ navigation }: RootTabScreenProps<'Conta
           }}
         />
       </MotiView>
-
-      <SectionList
-        sections={filteredContacts || contacts || []}
-        ItemSeparatorComponent={() => ItemSeparatorComponent}
-        renderItem={renderItem}
-        renderSectionHeader={renderSectionHeader}
-        contentContainerStyle={styles.contentContainer}
-        keyExtractor={keyExtractor}
-        fadingEdgeLength={8}
-      />
     </>
   );
 }
@@ -175,6 +166,9 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 8,
     paddingHorizontal: 24,
+    position: 'absolute',
+    left: 0,
+    right: 0,
   },
   sectionTitle: {
     fontSize: 16,
@@ -191,6 +185,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 24,
     paddingBottom: 24,
+    paddingTop: 68,
   },
   searchInput: {
     fontFamily: "Poppins_500Medium",
