@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View, SectionList, SectionListData, SectionListRenderItemInfo } from 'react-native';
 import ListItem from '../components/ListItem';
-import { Ionicons } from '@expo/vector-icons';
 import { MotiText, MotiView } from 'moti';
 import { Easing } from 'react-native-reanimated';
 
@@ -14,6 +13,7 @@ import { FadeIn } from 'react-native-reanimated';
 import useDebounce from '../hooks/useDebounce';
 import Colors from '../constants/Colors';
 import SearchIcon from '../icons/SearchIcon';
+import { Text } from '../components/Themed';
 
 export interface Contact {
   id: number,
@@ -44,7 +44,17 @@ const renderItem = ({ item: { name, lastName, phone }, index }: SectionListRende
       title={`${name} ${lastName}`}
       description={phone}
       hue={197}
-      icon={(size, color) => (<Ionicons name="person" size={size} color={color} />)} />
+      icon={(_, color) => (
+        <Text style={{
+          fontFamily: "Poppins_500Medium",
+          color: color,
+          fontSize: 16,
+          lineHeight: 22,
+        }}>
+          {name[0]}{lastName[0]}
+        </Text>
+      )}
+    />
   </MotiView>
 );
 

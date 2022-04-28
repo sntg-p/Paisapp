@@ -1,8 +1,4 @@
 import { StyleSheet, Pressable, useColorScheme, View } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
 import { Easing } from 'react-native-reanimated';
 
 import { useThemeColor } from './Themed';
@@ -74,7 +70,7 @@ export default function ServiceList() {
 }
 
 interface ServiceProps {
-  icon: string | ((size: number, color: string) => React.ReactNode);
+  icon?: ((size: number, color: string) => React.ReactNode);
   title: string;
   hue: number;
 }
@@ -110,13 +106,9 @@ function ServiceButton(props: ServiceProps) {
         width: 64,
         ...(shadow(30)),
       }}>
-        {typeof icon === 'string' ? (
-          <FontAwesome5
-            name={icon}
-            size={24}
-            style={{ color: iconColor }}
-          />
-        ) : icon(24, iconColor)}
+        {icon ? (
+          icon(24, iconColor)
+        ) : null}
       </View>
 
       <Text style={[styles.name, {

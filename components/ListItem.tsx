@@ -3,13 +3,12 @@ import {
   Pressable,
   View,
 } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
 
 import { Text, useThemeColor } from "./Themed";
 import { shadow } from "./Shadow";
 
 interface ListItemProps {
-  icon: string | ((size: number, color: string) => React.ReactNode);
+  icon?: ((size: number, color: string) => React.ReactNode);
   title: string;
   description?: string;
   right?: string;
@@ -50,15 +49,9 @@ export default function ListItem(props: ListItemProps) {
       <View style={[styles.iconContainer, {
         backgroundColor: iconBackgroundColor
       }]}>
-        {typeof icon === "string" ? (
-          <FontAwesome5
-            name={icon}
-            size={18}
-            style={{ color: iconColor }}
-          />
-        ) : (
+        {icon ? (
           icon(18, iconColor)
-        )}
+        ) : null}
       </View>
 
       <View style={styles.textContainer}>
